@@ -91,7 +91,7 @@ float trianglesign(sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f p3) {
 }
 
 bool trianglecollision(sf::Vector2f pt, sf::Vector2f v1, sf::Vector2f v2, sf::Vector2f v3) {
-	
+
 	float d1 = trianglesign(pt, v1, v2);
 	float d2 = trianglesign(pt, v2, v3);
 	float d3 = trianglesign(pt, v3, v1);
@@ -299,9 +299,14 @@ if (!m_landinganim.loadFromFile("textures/landing.anim.png")) {	// '.anim.png' f
 	std::cout << "Falied to Load Texture 'landing.anim'!" << std::endl;
 	ok = false;
 }
-sf::Texture l_dooranim;	// Spaceship landing animation
+sf::Texture l_dooranim;	// Door Opening Animation
 if (!l_dooranim.loadFromFile("textures/door.anim.png")) {	// '.anim.png' for spritesheet animations
 	std::cout << "Falied to Load Texture 'door.anim'!" << std::endl;
+	ok = false;
+}
+sf::Texture s_takeoff;	// Spaceship Takeoff Animation
+if (!s_takeoff.loadFromFile("textures/takeoff.anim.png")) {	// '.anim.png' for spritesheet animations
+	std::cout << "Falied to Load Texture 'takeoff.anim'!" << std::endl;
 	ok = false;
 }
 
@@ -620,7 +625,7 @@ case 3: {	// Mario Mode
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || (!player2mode && sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) ) m_p0interact = true;
 			else m_p0interact = false;
 			int direction = 0;
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || (!player2mode && sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ) ) direction -= 1; 
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || (!player2mode && sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ) ) direction -= 1;
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || (!player2mode && sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ) ) direction += 1;
 			if (m_p0land) m_p0vel.x = setng(m_p0vel.x, direction*m_speed);
@@ -631,14 +636,14 @@ case 3: {	// Mario Mode
 				m_p0airtime = 10;
 				m_jumpsound.play();
 			}
-			
+
 		}
 		// Player 1
 		if (!m_p1gameover && player2mode) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) m_p1interact = true;
 			else m_p1interact = false;
 			int direction = 0;
-			if ( player2mode && sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ) direction -= 1; 
+			if ( player2mode && sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ) direction -= 1;
 
 			if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ) direction += 1;
 			if (m_p1land) m_p1vel.x = setng(m_p1vel.x, direction*m_speed);
@@ -660,17 +665,17 @@ case 3: {	// Mario Mode
 		// Add Friction
 		if (m_p0land) m_p0vel.x = drag(m_p0vel.x, m_friction*deltatime);
 		if (m_p1land) m_p1vel.x = drag(m_p1vel.x, m_friction*deltatime);
-		
+
 		// Move Players
 		{	// Player 0
 			m_p0land = false;
 			sf::Vector2f future = m_p0pos;
 			sf::Vector2f movement = m_p0vel;
-			
+
 			// Collision Checks X
 			future.x += movement.x * deltatime;
 			if (	checkcollision(checkblock(&m_map, m_blocksize, future) ) ||
-				future.x < 0 || 
+				future.x < 0 ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_playersize.x, future.y ) ) ) ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_playersize.x, future.y + m_playersize.y ) ) ) ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x, future.y + m_playersize.y ) ) )
@@ -681,9 +686,9 @@ case 3: {	// Mario Mode
 
 			// Collision Checks Y
 			future.y += movement.y * deltatime;
-			
+
 			if (	checkcollision(checkblock(&m_map, m_blocksize, future) ) ||
-				future.y < 0 || 
+				future.y < 0 ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_playersize.x, future.y ) ) ) ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_playersize.x, future.y + m_playersize.y ) ) ) ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x, future.y + m_playersize.y ) ) )
@@ -699,11 +704,11 @@ case 3: {	// Mario Mode
 			m_p1land = false;
 			sf::Vector2f future = m_p1pos;
 			sf::Vector2f movement = m_p1vel;
-			
+
 			// Collision Checks X
 			future.x += movement.x * deltatime;
 			if (	checkcollision(checkblock(&m_map, m_blocksize, future) ) ||
-				future.x < 0 || 
+				future.x < 0 ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_playersize.x, future.y ) ) ) ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_playersize.x, future.y + m_playersize.y ) ) ) ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x, future.y + m_playersize.y ) ) )
@@ -714,9 +719,9 @@ case 3: {	// Mario Mode
 
 			// Collision Checks Y
 			future.y += movement.y * deltatime;
-			
+
 			if (	checkcollision(checkblock(&m_map, m_blocksize, future) ) ||
-				future.y < 0 || 
+				future.y < 0 ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_playersize.x, future.y ) ) ) ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_playersize.x, future.y + m_playersize.y ) ) ) ||
 				checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x, future.y + m_playersize.y ) ) )
@@ -728,7 +733,7 @@ case 3: {	// Mario Mode
 
 			m_p1pos = future;
 		}
-		
+
 		// Add Other Half of Gravity
 		m_p0vel.y += (-pow(m_gravity,2.f))*deltatime*0.5f;
 		m_p1vel.y += (-pow(m_gravity,2.f))*deltatime*0.5f;
@@ -751,7 +756,7 @@ case 3: {	// Mario Mode
 			}
 			// Round the future
 			future = std::roundf(future);
-			// 
+			//
 			if (future > 0) m_offset = future;
 
 		}
@@ -824,11 +829,11 @@ case 3: {	// Mario Mode
 			{
 				sf::Vector2f future = enemy.pos;
 				sf::Vector2f movement = enemy.vel;
-				
+
 				// Collision Checks X
 				future.x += movement.x * deltatime;
 				if (	checkcollision(checkblock(&m_map, m_blocksize, future) ) ||
-					future.x < 0 || 
+					future.x < 0 ||
 					checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_enemysize.x, future.y ) ) ) ||
 					checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_enemysize.x, future.y + m_enemysize.y ) ) ) ||
 					checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x, future.y + m_enemysize.y ) ) )
@@ -839,9 +844,9 @@ case 3: {	// Mario Mode
 
 				// Collision Checks Y
 				future.y += movement.y * deltatime;
-				
+
 				if (	checkcollision(checkblock(&m_map, m_blocksize, future) ) ||
-					future.y < 0 || 
+					future.y < 0 ||
 					checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_enemysize.x, future.y ) ) ) ||
 					checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x + m_enemysize.x, future.y + m_enemysize.y ) ) ) ||
 					checkcollision(checkblock(&m_map, m_blocksize, sf::Vector2f(future.x, future.y + m_enemysize.y ) ) )
@@ -919,7 +924,7 @@ case 3: {	// Mario Mode
 					else m_p1lives--;
 				}
 			}
-			
+
 			// Update Enemy
 			m_enemies.at(i) = enemy;
 		}
@@ -955,7 +960,7 @@ case 3: {	// Mario Mode
 		// Draw Level
 		m_level.setPosition(0-m_offset,0);
 		window.draw(m_level);
-		
+
 		// Interact With Tile Entities From Player Center
 		{
 			sf::Vector2f p0pos = m_p0pos + sf::Vector2f(m_playersize.x/2,m_playersize.y/2);
@@ -988,7 +993,7 @@ case 3: {	// Mario Mode
 						break;
 					case SCORE: {
 						score += interact.level;
-						
+
 						// Yaytext
 						YayText text;
 						text.pos = p0pos;
@@ -1003,7 +1008,7 @@ case 3: {	// Mario Mode
 						nextminigame = 4;
 						player1gameover = m_p0gameover;
 						player2gameover = m_p1gameover;
-						
+
 						// Yaytext
 						YayText doortext;
 						doortext.pos = p0pos;
@@ -1021,7 +1026,7 @@ case 3: {	// Mario Mode
 							m_p0damagetime = 0;
 							m_p0gameover = false;
 							m_p0lives += interact.level;
-							
+
 							// Yaytext
 							YayText text;
 							text.pos = p1pos;
@@ -1030,7 +1035,7 @@ case 3: {	// Mario Mode
 						}
 						else {
 							m_p1lives += interact.level;
-							
+
 							// Yaytext
 							YayText text;
 							text.pos = p1pos;
@@ -1042,7 +1047,7 @@ case 3: {	// Mario Mode
 						break;
 					case SCORE: {
 						score += interact.level;
-						
+
 						// Yaytext
 						YayText text;
 						text.pos = p1pos;
@@ -1057,7 +1062,7 @@ case 3: {	// Mario Mode
 						nextminigame = 4;
 						player1gameover = m_p0gameover;
 						player2gameover = m_p1gameover;
-						
+
 						// Yaytext
 						YayText doortext;
 						doortext.pos = p1pos;
@@ -1114,7 +1119,7 @@ case 3: {	// Mario Mode
 
 // End of mario minigame
 
-case 4: {	// Animation of falling into laberinth TODO
+case 4: {	// Animation of falling into laberinth
 	sf::RectangleShape animation = sf::RectangleShape(sf::Vector2f(windowsize));
 	animation.setTexture(&l_dooranim);
 	animation.setTextureRect(animateframe(l_dooranim,42,13,time)); // 42 frames long at 13 fps using animation 'm_landinganim'
@@ -1135,7 +1140,7 @@ case 4: {	// Animation of falling into laberinth TODO
 // Laberinth Minigame
 case 5: {
 #define LABERINTH_INST
-#include "laberinth.cpp"	
+#include "laberinth.cpp"
 } break;
 case 6: {
 #define LABERINTH_GEN
@@ -1143,12 +1148,26 @@ case 6: {
 } break;
 case 7: {
 #define LABERINTH_CODE
-#include "laberinth.cpp"	
+#include "laberinth.cpp"
 } break;
 
 // Animation of getting out of laberinth
 case 8: {
-	if (true) nextminigame = 9;
+	sf::RectangleShape animation = sf::RectangleShape(sf::Vector2f(windowsize));
+	animation.setTexture(&s_takeoff);
+	animation.setTextureRect(animateframe(s_takeoff,19,13,time)); // 19 frames long at 13 fps using animation 'm_landinganim'
+
+	// Move on if done
+	if (animationdone(19,13,time)) {
+		animation.setTextureRect(animateframe(s_takeoff,19,1,18)); // Freeze on last frame
+		nextminigame = 9;
+		if (planetanimtime >= PLANETANIMLENGTH) planetanimtime = 0;
+	}
+
+	window.draw(animation);
+
+	message = "";
+	tiptext = "";
 } break;
 
 	case 9: {	// Stinger instructions
@@ -1173,7 +1192,7 @@ case 8: {
 		nextminigame = 10;	// Skip animation
 		clock.restart();
 	}
-		
+
 	} break;
 
 // Stinger minigame
@@ -1185,7 +1204,21 @@ case 10: {
 // Animation of escaping planet TODO
 
 case 11: {
-	if (true) nextminigame = 12;
+	sf::RectangleShape animation = sf::RectangleShape(sf::Vector2f(windowsize));
+	animation.setTexture(&s_takeoff);
+	animation.setTextureRect(animateframe(s_takeoff,19,13,time)); // 19 frames long at 13 fps using animation 'm_landinganim'
+
+	// Move on if done
+	if (animationdone(19,13,time)) {
+		animation.setTextureRect(animateframe(s_takeoff,19,1,18)); // Freeze on last frame
+		nextminigame = 12;
+		if (planetanimtime >= PLANETANIMLENGTH) planetanimtime = 0;
+	}
+
+	window.draw(animation);
+
+	message = "";
+	tiptext = "";
 } break;
 
 // Return to main game
@@ -1217,7 +1250,7 @@ case 12: {
 		player1rotation = 180;
 		player1velocity = sf::Vector2f(0, 0);
 		player1rotationVelocity = 0;
-		
+
 	}
 	clock.restart();
 	// Reset game

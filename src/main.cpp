@@ -1,6 +1,7 @@
 // A spaceship game where you try fly through an asteroid field while being
 // chased by enemy ships as you struggle to keep your ship under control
 #define GAMENAME "Asteroidal"
+#define DEBUG
 #include "highscore.h"
 
 // SFML Library for Rendering (apt-get libsfml-dev)
@@ -28,6 +29,9 @@
 #define MOVEMENTVEL 400
 #define ROTATIONVEL 400
 
+// Main Game Scale
+#define GAMESCALE (float)1.5   // multiplier
+
 #define ASTEROIDPOINTS 1
 #define ENEMYPOINTS 5
 #define BOMBSCORE 10 // Points for each unused bomb
@@ -41,7 +45,14 @@
 // Powerups
 #define PLANETANIMLENGTH 2
 #define PLANET_SIZE 80
-#define PLANETSPAWNCHANCE 1 // 1/x chance [Default: 16]
+#ifdef DEBUG
+#define PLANETSPAWNCHANCE 1
+#endif // DEBUG
+#ifndef DEBUG
+#define PLANETSPAWNCHANCE 16 // 1/x chance [Default: 16]
+#endif // !DEBUG
+
+
 #define COLLECTRADIUS 40
 #define POWERUPCHANCE 20 // 1/ (x/2) chance
 #define BOMBCHANCE 5	 // 1/x chance
@@ -73,6 +84,7 @@
 #define ASTEROIDSPEEDSCALE 2
 #define MAXASTEROIDSIZE 800
 #define BASEASTEROIDSIZE 100
+#define TRI_ASTEROID_CHANCE 5
 #define ASTEROIDSIZESCALE 1
 #define MINASTEROIDSIZE 25
 #define ASTEROIDBOUNCESPEEDSCALE                                               \
@@ -385,10 +397,10 @@ int main() {
 	bitturtlesound.play();
 
 	while (window.isOpen()) {
-		
+
 		// Calculate Deltatime
 		float deltatime = deltaClock.restart().asSeconds();
-		
+
 		showtooltip = false;
 		enter = false;
 		// Process Events
@@ -1466,11 +1478,11 @@ int main() {
 							player1velocity.x -=
 							    sin(player1rotation *
 								PI / 180) *
-							    (deltatime)*MOVEMENTVEL*screen_scale;
+							    (deltatime)*MOVEMENTVEL*screen_scale*GAMESCALE;
 							player1velocity.y +=
 							    cos(player1rotation *
 								PI / 180) *
-							    (deltatime)*MOVEMENTVEL*screen_scale;
+							    (deltatime)*MOVEMENTVEL*screen_scale*GAMESCALE;
 						}
 						float direction = 0;
 						if (sf::Keyboard::isKeyPressed(
@@ -1526,10 +1538,10 @@ int main() {
 							    sf::Vector2f(
 								sin(-player1rotation *
 								    PI / 180) *
-								    LAZERSPEED*screen_scale,
+								    LAZERSPEED*screen_scale*GAMESCALE,
 								cos(-player1rotation *
 								    PI / 180) *
-								    LAZERSPEED*screen_scale));
+								    LAZERSPEED*screen_scale*GAMESCALE));
 							lazervelocity.at(
 							    lazervelocity
 								.size() -
@@ -1566,7 +1578,7 @@ int main() {
 								cos(-player1rotation *
 								    PI / 180)) *
 							    (float)
-								HITRADIUS*screen_scale; // Get
+								HITRADIUS*screen_scale*GAMESCALE; // Get
 									   // Lazer
 									   // out
 									   // of
@@ -1584,11 +1596,11 @@ int main() {
 							player1velocity.x -=
 							    sin(player1rotation *
 								PI / 180) *
-							    (deltatime)*MOVEMENTVEL*screen_scale;
+							    (deltatime)*MOVEMENTVEL*screen_scale*GAMESCALE;
 							player1velocity.y +=
 							    cos(player1rotation *
 								PI / 180) *
-							    (deltatime)*MOVEMENTVEL*screen_scale;
+							    (deltatime)*MOVEMENTVEL*screen_scale*GAMESCALE;
 						}
 						float direction = 0;
 						if (sf::Keyboard::isKeyPressed(
@@ -1630,10 +1642,10 @@ int main() {
 							    sf::Vector2f(
 								sin(-player1rotation *
 								    PI / 180) *
-								    LAZERSPEED*screen_scale,
+								    LAZERSPEED*screen_scale*GAMESCALE,
 								cos(-player1rotation *
 								    PI / 180) *
-								    LAZERSPEED*screen_scale));
+								    LAZERSPEED*screen_scale*GAMESCALE));
 							lazervelocity.at(
 							    lazervelocity
 								.size() -
@@ -1650,7 +1662,7 @@ int main() {
 									    .size() -
 									1)
 								    .y) <
-							    LAZERSPEED*screen_scale)
+							    LAZERSPEED*screen_scale*GAMESCALE)
 								lazervelocity.at(
 								    lazervelocity
 									.size() -
@@ -1740,13 +1752,13 @@ int main() {
 								     apos.x) /
 									asteroidsize
 									    .at(a) *
-									SHEILDREPELSTRENGTH*screen_scale,
+									SHEILDREPELSTRENGTH*screen_scale*GAMESCALE,
 								    (player1position
 									 .y -
 								     apos.y) /
 									asteroidsize
 									    .at(a) *
-									SHEILDREPELSTRENGTH*screen_scale);
+									SHEILDREPELSTRENGTH*screen_scale*GAMESCALE);
 
 								// Push out if
 								// in asteroid
@@ -1887,7 +1899,7 @@ int main() {
 									.y -
 								    player1position
 									.y) <=
-							    HITRADIUS*screen_scale) {
+							    HITRADIUS*screen_scale*GAMESCALE) {
 
 								// Delete Lazer
 								lazerpositions.erase(
@@ -1946,7 +1958,7 @@ int main() {
 										EXPLOSIONTIME);
 									explosionsize
 									    .push_back(
-										PLAYEREXPLOSIONSIZE*screen_scale);
+										PLAYEREXPLOSIONSIZE*screen_scale*GAMESCALE);
 
 									// Text
 									texts++;
@@ -1999,25 +2011,25 @@ int main() {
 					    6); // Triangle shaped player with
 						// rectangular tip
 					player.setPoint(
-					    0, sf::Vector2f(-2*screen_scale, 10*screen_scale)); //     **
+					    0, sf::Vector2f(-2*screen_scale*GAMESCALE, 10*screen_scale*GAMESCALE)); //     **
 					player.setPoint(
-					    1, sf::Vector2f(-2*screen_scale, 15*screen_scale)); //     **
+					    1, sf::Vector2f(-2*screen_scale*GAMESCALE, 15*screen_scale*GAMESCALE)); //     **
 					player.setPoint(
-					    2, sf::Vector2f(2*screen_scale, 15*screen_scale)); //     **
+					    2, sf::Vector2f(2*screen_scale*GAMESCALE, 15*screen_scale*GAMESCALE)); //     **
 					player.setPoint(
-					    3, sf::Vector2f(2*screen_scale, 10*screen_scale)); //    *  *
+					    3, sf::Vector2f(2*screen_scale*GAMESCALE, 10*screen_scale*GAMESCALE)); //    *  *
 					player.setPoint(
-					    4, sf::Vector2f(10*screen_scale, -10*screen_scale)); //   * *
+					    4, sf::Vector2f(10*screen_scale*GAMESCALE, -10*screen_scale*GAMESCALE)); //   * *
 					player.setPoint(
-					    5, sf::Vector2f(-10*screen_scale,
-							    -10*screen_scale)); //  ********
+					    5, sf::Vector2f(-10*screen_scale*GAMESCALE,
+							    -10*screen_scale*GAMESCALE)); //  ********
 					player.setFillColor(
 					    sf::Color::
 						Transparent); // Transparent
 							      // Fill
 					player.setOutlineColor(
 					    sf::Color::White); // White Outline
-					player.setOutlineThickness(2*screen_scale);
+					player.setOutlineThickness(2*screen_scale*GAMESCALE);
 
 					player.setPosition(
 					    player1position); // Position
@@ -2029,16 +2041,16 @@ int main() {
 
 					// Draw Fire
 					sf::ConvexShape fire(5);
-					fire.setPoint(0, sf::Vector2f(-8*screen_scale, -15*screen_scale));
-					fire.setPoint(1, sf::Vector2f(-5*screen_scale, -20*screen_scale));
-					fire.setPoint(2, sf::Vector2f(0*screen_scale, -18*screen_scale));
-					fire.setPoint(3, sf::Vector2f(5*screen_scale, -20*screen_scale));
-					fire.setPoint(4, sf::Vector2f(8*screen_scale, -15*screen_scale));
+					fire.setPoint(0, sf::Vector2f(-8*screen_scale*GAMESCALE, -15*screen_scale*GAMESCALE));
+					fire.setPoint(1, sf::Vector2f(-5*screen_scale*GAMESCALE, -20*screen_scale*GAMESCALE));
+					fire.setPoint(2, sf::Vector2f(0*screen_scale*GAMESCALE, -18*screen_scale*GAMESCALE));
+					fire.setPoint(3, sf::Vector2f(5*screen_scale*GAMESCALE, -20*screen_scale*GAMESCALE));
+					fire.setPoint(4, sf::Vector2f(8*screen_scale*GAMESCALE, -15*screen_scale*GAMESCALE));
 
 					fire.setFillColor(
 					    sf::Color::Transparent);
 					fire.setOutlineColor(sf::Color::White);
-					fire.setOutlineThickness(2*screen_scale);
+					fire.setOutlineThickness(2*screen_scale*GAMESCALE);
 
 					fire.setPosition(
 					    player1position); // Position
@@ -2051,7 +2063,7 @@ int main() {
 					if (player2mode) {
 						// Player indicator
 						sf::RectangleShape indicator(
-						    sf::Vector2f(4*screen_scale, 4*screen_scale));
+						    sf::Vector2f(4*screen_scale*GAMESCALE, 4*screen_scale*GAMESCALE));
 
 						indicator.setOrigin(
 						    indicator.getLocalBounds()
@@ -2074,7 +2086,7 @@ int main() {
 						    sf::Color::
 							White); // White Outline
 						indicator.setOutlineThickness(
-						    2*screen_scale);
+						    2*screen_scale*GAMESCALE);
 
 						// Draw
 						window.draw(indicator);
@@ -2085,12 +2097,12 @@ int main() {
 					    clock.getElapsedTime().asSeconds() -
 					    player1time;
 					sf::CircleShape sheild;
-					float sheildThickness = 2*screen_scale;
+					float sheildThickness = 2*screen_scale*GAMESCALE;
 					for (int i = 0; i < player1sheilds;
 					     i++) {
 						sheild = sf::CircleShape(
-						    SHEILDSIZE +
-							SHEILDSPACE * i,
+						    SHEILDSIZE*screen_scale*GAMESCALE +
+							SHEILDSPACE*screen_scale*GAMESCALE * i,
 						    16);
 						sheild.setFillColor(
 						    sf::Color::Transparent);
@@ -2113,14 +2125,14 @@ int main() {
 						if (ptime >
 						    SHEILDANIMATIONLENGTH) {
 							sheild = sf::CircleShape(
-							    SHEILDSIZE*screen_scale +
-								(SHEILDSPACE*screen_scale *
+							    SHEILDSIZE*screen_scale*GAMESCALE +
+								(SHEILDSPACE*screen_scale*GAMESCALE *
 								 player1sheilds),
 							    16);
 						} else {
 							sheild = sf::CircleShape(
-							    SHEILDSIZE*screen_scale +
-								(SHEILDSPACE*screen_scale *
+							    SHEILDSIZE*screen_scale*GAMESCALE +
+								(SHEILDSPACE*screen_scale*GAMESCALE *
 								 player1sheilds) +
 								SHEILDRANGE *
 								    ((SHEILDANIMATIONLENGTH -
@@ -2130,7 +2142,7 @@ int main() {
 							sheildThickness =
 							    ptime /
 							    SHEILDANIMATIONLENGTH *
-							    2*screen_scale;
+							    2*screen_scale*GAMESCALE;
 						}
 						sheild.setFillColor(
 						    sf::Color::Transparent);
@@ -2152,8 +2164,8 @@ int main() {
 						if (ptime <=
 						    SHEILDANIMATIONLENGTH) {
 							sheild = sf::CircleShape(
-							    SHEILDSIZE*screen_scale +
-								SHEILDSPACE*screen_scale *
+							    SHEILDSIZE*screen_scale*GAMESCALE +
+								SHEILDSPACE*screen_scale*GAMESCALE *
 								    player1sheilds +
 								SHEILDRANGE *
 								    (ptime /
@@ -2163,7 +2175,7 @@ int main() {
 							    (SHEILDANIMATIONLENGTH -
 							     ptime) /
 							    SHEILDANIMATIONLENGTH *
-							    2*screen_scale;
+							    2*screen_scale*GAMESCALE;
 							sheild.setFillColor(
 							    sf::Color::
 								Transparent);
@@ -2200,11 +2212,11 @@ int main() {
 							player2velocity.x -=
 							    sin(player2rotation *
 								PI / 180) *
-							    (deltatime)*MOVEMENTVEL*screen_scale;
+							    (deltatime)*MOVEMENTVEL*screen_scale*GAMESCALE;
 							player2velocity.y +=
 							    cos(player2rotation *
 								PI / 180) *
-							    (deltatime)*MOVEMENTVEL*screen_scale;
+							    (deltatime)*MOVEMENTVEL*screen_scale*GAMESCALE;
 						}
 						float direction = 0;
 						if (sf::Keyboard::isKeyPressed(
@@ -2246,10 +2258,10 @@ int main() {
 							    sf::Vector2f(
 								sin(-player2rotation *
 								    PI / 180) *
-								    LAZERSPEED*screen_scale,
+								    LAZERSPEED*screen_scale*GAMESCALE,
 								cos(-player2rotation *
 								    PI / 180) *
-								    LAZERSPEED*screen_scale));
+								    LAZERSPEED*screen_scale*GAMESCALE));
 							lazervelocity.at(
 							    lazervelocity
 								.size() -
@@ -2270,7 +2282,7 @@ int main() {
 									    .size() -
 									1)
 								    .y) <
-							    LAZERSPEED*screen_scale)
+							    LAZERSPEED*screen_scale*GAMESCALE)
 								lazervelocity.at(
 								    lazervelocity
 									.size() -
@@ -2286,7 +2298,7 @@ int main() {
 								cos(-player2rotation *
 								    PI / 180)) *
 							    (float)
-								HITRADIUS*screen_scale; // Get
+								HITRADIUS*screen_scale*GAMESCALE; // Get
 									   // Lazer
 									   // out
 									   // of
@@ -2377,13 +2389,13 @@ int main() {
 								     apos.x) /
 									asteroidsize
 									    .at(a) *
-									SHEILDREPELSTRENGTH*screen_scale,
+									SHEILDREPELSTRENGTH*screen_scale*GAMESCALE,
 								    (player2position
 									 .y -
 								     apos.y) /
 									asteroidsize
 									    .at(a) *
-									SHEILDREPELSTRENGTH*screen_scale);
+									SHEILDREPELSTRENGTH*screen_scale*GAMESCALE);
 
 								// Push out if
 								// in asteroid
@@ -2488,7 +2500,7 @@ int main() {
 									EXPLOSIONTIME);
 								explosionsize
 								    .push_back(
-									PLAYEREXPLOSIONSIZE*screen_scale);
+									PLAYEREXPLOSIONSIZE*screen_scale*GAMESCALE);
 
 								// Text
 								texts++;
@@ -2522,7 +2534,7 @@ int main() {
 									.y -
 								    player2position
 									.y) <=
-							    HITRADIUS*screen_scale) {
+							    HITRADIUS*screen_scale*GAMESCALE) {
 
 								// Delete Lazer
 								lazerpositions.erase(
@@ -2585,7 +2597,7 @@ int main() {
 										EXPLOSIONTIME);
 									explosionsize
 									    .push_back(
-										PLAYEREXPLOSIONSIZE*screen_scale);
+										PLAYEREXPLOSIONSIZE*screen_scale*GAMESCALE);
 
 									// Text
 									texts++;
@@ -2637,24 +2649,24 @@ int main() {
 					    6); // Triangle shaped player with
 						// rectangular tip
 					player.setPoint(
-					    0, sf::Vector2f(-2*screen_scale, 10*screen_scale)); //     **
+					    0, sf::Vector2f(-2*screen_scale*GAMESCALE, 10*screen_scale*GAMESCALE)); //     **
 					player.setPoint(
-					    1, sf::Vector2f(-2*screen_scale, 15*screen_scale)); //     **
+					    1, sf::Vector2f(-2*screen_scale*GAMESCALE, 15*screen_scale*GAMESCALE)); //     **
 					player.setPoint(
-					    2, sf::Vector2f(2*screen_scale, 15*screen_scale)); //     **
+					    2, sf::Vector2f(2*screen_scale*GAMESCALE, 15*screen_scale*GAMESCALE)); //     **
 					player.setPoint(
-					    3, sf::Vector2f(2*screen_scale, 10*screen_scale)); //    *  *
+					    3, sf::Vector2f(2*screen_scale*GAMESCALE, 10*screen_scale*GAMESCALE)); //    *  *
 					player.setPoint(
-					    4, sf::Vector2f(10*screen_scale, -10*screen_scale)); //   * *
+					    4, sf::Vector2f(10*screen_scale*GAMESCALE, -10*screen_scale*GAMESCALE)); //   * *
 					player.setPoint(
-					    5, sf::Vector2f(-10*screen_scale,
-							    -10*screen_scale)); //  ********
+					    5, sf::Vector2f(-10*screen_scale*GAMESCALE,
+							    -10*screen_scale*GAMESCALE)); //  ********
 					player.setFillColor(
 					    sf::Color::Transparent); // Black
 								     // Fill
 					player.setOutlineColor(
 					    sf::Color::White); // White Outline
-					player.setOutlineThickness(2*screen_scale);
+					player.setOutlineThickness(2*screen_scale*GAMESCALE);
 
 					player.setPosition(
 					    player2position); // Position
@@ -2666,16 +2678,16 @@ int main() {
 
 					// Draw Fire
 					sf::ConvexShape fire(5);
-					fire.setPoint(0, sf::Vector2f(-8*screen_scale, -15*screen_scale));
-					fire.setPoint(1, sf::Vector2f(-5*screen_scale, -20*screen_scale));
-					fire.setPoint(2, sf::Vector2f(0*screen_scale, -18*screen_scale));
-					fire.setPoint(3, sf::Vector2f(5*screen_scale, -20*screen_scale));
-					fire.setPoint(4, sf::Vector2f(8*screen_scale, -15*screen_scale));
+					fire.setPoint(0, sf::Vector2f(-8*screen_scale*GAMESCALE, -15*screen_scale*GAMESCALE));
+					fire.setPoint(1, sf::Vector2f(-5*screen_scale*GAMESCALE, -20*screen_scale*GAMESCALE));
+					fire.setPoint(2, sf::Vector2f(0*screen_scale*GAMESCALE, -18*screen_scale*GAMESCALE));
+					fire.setPoint(3, sf::Vector2f(5*screen_scale*GAMESCALE, -20*screen_scale*GAMESCALE));
+					fire.setPoint(4, sf::Vector2f(8*screen_scale*GAMESCALE, -15*screen_scale*GAMESCALE));
 
 					fire.setFillColor(
 					    sf::Color::Transparent);
 					fire.setOutlineColor(sf::Color::White);
-					fire.setOutlineThickness(2*screen_scale);
+					fire.setOutlineThickness(2*screen_scale*GAMESCALE);
 
 					fire.setPosition(
 					    player2position); // Position
@@ -2687,14 +2699,14 @@ int main() {
 
 					// Player indicator
 					sf::RectangleShape indicator(
-					    sf::Vector2f(2*screen_scale, 8*screen_scale));
+					    sf::Vector2f(2*screen_scale*GAMESCALE, 8*screen_scale*GAMESCALE));
 
 					indicator.setOrigin(
 					    indicator.getLocalBounds().width /
 						2,
 					    indicator.getLocalBounds().height /
 						    2 +
-						2*screen_scale); // Shift 2px down from
+						2*screen_scale*GAMESCALE); // Shift 2px down from
 						    // center
 					indicator.setPosition(player2position);
 					indicator.setRotation(player2rotation);
@@ -2707,12 +2719,12 @@ int main() {
 					    clock.getElapsedTime().asSeconds() -
 					    player2time;
 					sf::CircleShape sheild;
-					float sheildThickness = 2*screen_scale;
+					float sheildThickness = 2*screen_scale*GAMESCALE;
 					for (int i = 0; i < player2sheilds;
 					     i++) {
 						sheild = sf::CircleShape(
-						    SHEILDSIZE*screen_scale +
-							SHEILDSPACE*screen_scale * i,
+						    SHEILDSIZE*screen_scale*GAMESCALE +
+							SHEILDSPACE*screen_scale*GAMESCALE * i,
 						    16);
 						sheild.setFillColor(
 						    sf::Color::Transparent);
@@ -2735,14 +2747,14 @@ int main() {
 						if (ptime >
 						    SHEILDANIMATIONLENGTH) {
 							sheild = sf::CircleShape(
-							    SHEILDSIZE*screen_scale +
-								(SHEILDSPACE*screen_scale *
+							    SHEILDSIZE*screen_scale*GAMESCALE +
+								(SHEILDSPACE*screen_scale*GAMESCALE *
 								 player2sheilds),
 							    16);
 						} else {
 							sheild = sf::CircleShape(
-							    SHEILDSIZE*screen_scale +
-								(SHEILDSPACE*screen_scale *
+							    SHEILDSIZE*screen_scale*GAMESCALE +
+								(SHEILDSPACE*screen_scale*GAMESCALE *
 								 player2sheilds) +
 								SHEILDRANGE *
 								    ((SHEILDANIMATIONLENGTH -
@@ -2752,7 +2764,7 @@ int main() {
 							sheildThickness =
 							    ptime /
 							    SHEILDANIMATIONLENGTH *
-							    2*screen_scale;
+							    2*screen_scale*GAMESCALE;
 						}
 						sheild.setFillColor(
 						    sf::Color::Transparent);
@@ -2774,10 +2786,10 @@ int main() {
 						if (ptime <=
 						    SHEILDANIMATIONLENGTH) {
 							sheild = sf::CircleShape(
-							    SHEILDSIZE*screen_scale +
-								SHEILDSPACE*screen_scale *
+							    SHEILDSIZE*screen_scale*GAMESCALE +
+								SHEILDSPACE*screen_scale*GAMESCALE *
 								    player2sheilds +
-								SHEILDRANGE*screen_scale *
+								SHEILDRANGE*screen_scale*GAMESCALE *
 								    (ptime /
 								     SHEILDANIMATIONLENGTH),
 							    16);
@@ -2785,7 +2797,7 @@ int main() {
 							    (SHEILDANIMATIONLENGTH -
 							     ptime) /
 							    SHEILDANIMATIONLENGTH *
-							    2*screen_scale;
+							    2*screen_scale*GAMESCALE;
 							sheild.setFillColor(
 							    sf::Color::
 								Transparent);
@@ -2815,7 +2827,7 @@ int main() {
 					    lazervelocity.at(i) * (deltatime);
 					// Render Lazer
 					sf::RectangleShape lazer(
-					    sf::Vector2f(2*screen_scale, 10*screen_scale));
+					    sf::Vector2f(2*screen_scale*GAMESCALE, 10*screen_scale*GAMESCALE));
 					lazer.setOrigin(
 					    lazer.getLocalBounds().width / 2,
 					    lazer.getLocalBounds().height / 2);
@@ -2826,15 +2838,15 @@ int main() {
 
 					// Delete offscreen lazers
 					if (lazerpositions.at(i).x <
-						0 - LAZERDESPAWNDISTANCE*screen_scale ||
+						0 - LAZERDESPAWNDISTANCE*screen_scale*GAMESCALE ||
 					    lazerpositions.at(i).x >
 						window.getSize().x +
-						    LAZERDESPAWNDISTANCE*screen_scale ||
+						    LAZERDESPAWNDISTANCE*screen_scale*GAMESCALE ||
 					    lazerpositions.at(i).y <
-						0 - LAZERDESPAWNDISTANCE*screen_scale ||
+						0 - LAZERDESPAWNDISTANCE*screen_scale*GAMESCALE ||
 					    lazerpositions.at(i).y >
 						window.getSize().y +
-						    LAZERDESPAWNDISTANCE*screen_scale) {
+						    LAZERDESPAWNDISTANCE*screen_scale*GAMESCALE) {
 						lazerrotation.erase(
 						    lazerrotation.begin() + i);
 						lazervelocity.erase(
@@ -2978,7 +2990,7 @@ int main() {
 							explosionpositions
 							    .push_back(pos);
 							explosionsize.push_back(
-							    EXPLOSIONSIZE*screen_scale);
+							    EXPLOSIONSIZE*screen_scale*GAMESCALE);
 							explosiontime.push_back(
 							    EXPLOSIONTIME);
 							// Delete Lazer
@@ -3005,11 +3017,11 @@ int main() {
 				// Explosions
 				// Generate Explosion shape
 				sf::CircleShape explosion(
-				    10.f*screen_scale);		     // Radius 10 circle
+				    10.f*screen_scale*GAMESCALE);		     // Radius 10 circle
 				explosion.setPointCount(16); // 16 Points
 				explosion.setFillColor(sf::Color::Transparent);
 				explosion.setOutlineColor(sf::Color::White);
-				explosion.setOutlineThickness(2*screen_scale);
+				explosion.setOutlineThickness(2*screen_scale*GAMESCALE);
 				for (int i = 0; i < explosions; i++) {
 					explosiontime.at(i) -= deltatime;
 					explosion.setRadius(
@@ -3044,14 +3056,14 @@ int main() {
 				for (int i = 0; i < asteroids; i++) {
 					// Render
 					sf::CircleShape asteroid(
-					    asteroidsize.at(i), 4);
+					    asteroidsize.at(i), ((int)asteroidsize.at(i)%TRI_ASTEROID_CHANCE == 0) ? 3 : 4);
 					asteroid.setPosition(
 					    asteroidpositions.at(i));
 					asteroid.setRotation(
 					    asteroidrotation.at(i));
 					asteroid.setFillColor(
 					    sf::Color::Transparent);
-					asteroid.setOutlineThickness(2*screen_scale);
+					asteroid.setOutlineThickness(2*screen_scale*GAMESCALE);
 					asteroid.setOutlineColor(
 					    sf::Color::White);
 					asteroid.setOrigin(
@@ -3177,7 +3189,7 @@ int main() {
 					asteroidvelocity.at(i) = tavel;
 					// Delete small asteroids
 					if (asteroidsize.at(i) <
-					    MINASTEROIDSIZE*screen_scale) { // Delete
+					    MINASTEROIDSIZE*screen_scale*GAMESCALE) { // Delete
 							       // Asteroid if it
 							       // is too small
 
@@ -3328,27 +3340,27 @@ int main() {
 							    sin(erot * PI /
 								180) *
 								(deltatime) *
-								(MOVEMENTVEL*screen_scale) >=
-							ENEMYMAXVELOCITY*screen_scale ||
+								(MOVEMENTVEL*screen_scale*GAMESCALE) >=
+							ENEMYMAXVELOCITY*screen_scale*GAMESCALE ||
 						    evel.x -
 							    sin(erot * PI /
 								180) *
 								(deltatime) *
-								(MOVEMENTVEL*screen_scale) <=
-							-ENEMYMAXVELOCITY*screen_scale)
+								(MOVEMENTVEL*screen_scale*GAMESCALE) <=
+							-ENEMYMAXVELOCITY*screen_scale*GAMESCALE)
 							engine = false;
 						if (evel.y +
 							    cos(erot * PI /
 								180) *
 								(deltatime) *
-								(MOVEMENTVEL*screen_scale) >=
-							ENEMYMAXVELOCITY*screen_scale ||
+								(MOVEMENTVEL*screen_scale*GAMESCALE) >=
+							ENEMYMAXVELOCITY*screen_scale*GAMESCALE ||
 						    evel.y +
 							    cos(erot * PI /
 								180) *
 								(deltatime) *
-								(MOVEMENTVEL*screen_scale) <=
-							-ENEMYMAXVELOCITY*screen_scale)
+								(MOVEMENTVEL*screen_scale*GAMESCALE) <=
+							-ENEMYMAXVELOCITY*screen_scale*GAMESCALE)
 							engine = false;
 
 						// Lazer
@@ -3369,10 +3381,10 @@ int main() {
 					if (engine) {
 						evel.x -= sin(erot * PI / 180) *
 							  (deltatime) *
-							  (MOVEMENTVEL*screen_scale);
+							  (MOVEMENTVEL*screen_scale*GAMESCALE);
 						evel.y += cos(erot * PI / 180) *
 							  (deltatime) *
-							  (MOVEMENTVEL*screen_scale);
+							  (MOVEMENTVEL*screen_scale*GAMESCALE);
 					}
 
 					// Steer enemy
@@ -3402,9 +3414,9 @@ int main() {
 						lazervelocity.push_back(
 						    sf::Vector2f(
 							sin(-erot * PI / 180) *
-							    LAZERSPEED*screen_scale,
+							    LAZERSPEED*screen_scale*GAMESCALE,
 							cos(-erot * PI / 180) *
-							    LAZERSPEED*screen_scale));
+							    LAZERSPEED*screen_scale*GAMESCALE));
 						lazervelocity.at(
 						    lazervelocity.size() - 1) +=
 						    evel; // Add enemy velocity
@@ -3419,7 +3431,7 @@ int main() {
 							    .at(lazervelocity
 								    .size() -
 								1)
-							    .y) < LAZERSPEED*screen_scale)
+							    .y) < LAZERSPEED*screen_scale*GAMESCALE)
 							lazervelocity.at(
 							    lazervelocity
 								.size() -
@@ -3431,7 +3443,7 @@ int main() {
 							sin(-erot * PI / 180),
 							cos(-erot * PI / 180)) *
 						    (float)
-							E_HITRADIUS*screen_scale; // Get Lazer
+							E_HITRADIUS*screen_scale*GAMESCALE; // Get Lazer
 								   // out of hit
 								   // radius
 						// Update Lazer Cooldown
@@ -3479,7 +3491,7 @@ int main() {
 							explosiontime.push_back(
 							    EXPLOSIONTIME);
 							explosionsize.push_back(
-							    PLAYEREXPLOSIONSIZE*screen_scale);
+							    PLAYEREXPLOSIONSIZE*screen_scale*GAMESCALE);
 
 							// Delete Enemy
 							enemypositions.erase(
@@ -3541,7 +3553,7 @@ int main() {
 									.at(l)
 									.y -
 								    epos.y) <=
-							    E_HITRADIUS*screen_scale) {
+							    E_HITRADIUS*screen_scale*GAMESCALE) {
 
 								// Delete Lazer
 								lazerpositions.erase(
@@ -3571,7 +3583,7 @@ int main() {
 									EXPLOSIONTIME);
 								explosionsize
 								    .push_back(
-									PLAYEREXPLOSIONSIZE*screen_scale);
+									PLAYEREXPLOSIONSIZE*screen_scale*GAMESCALE);
 
 								// Delete Enemy
 								enemypositions.erase(
@@ -3635,29 +3647,29 @@ int main() {
 					    8); // Square shaped enemy with
 						// rectangular tip
 					enemy.setPoint(
-					    0, sf::Vector2f(-2*screen_scale, 10*screen_scale)); //     **
+					    0, sf::Vector2f(-2*screen_scale*GAMESCALE, 10*screen_scale*GAMESCALE)); //     **
 					enemy.setPoint(
-					    1, sf::Vector2f(-2*screen_scale, 15*screen_scale)); //     **
+					    1, sf::Vector2f(-2*screen_scale*GAMESCALE, 15*screen_scale*GAMESCALE)); //     **
 					enemy.setPoint(
 					    2,
-					    sf::Vector2f(2*screen_scale, 15*screen_scale)); //  ********
+					    sf::Vector2f(2*screen_scale*GAMESCALE, 15*screen_scale*GAMESCALE)); //  ********
 					enemy.setPoint(
-					    3, sf::Vector2f(2*screen_scale, 10*screen_scale)); //  * *
+					    3, sf::Vector2f(2*screen_scale*GAMESCALE, 10*screen_scale*GAMESCALE)); //  * *
 					enemy.setPoint(
-					    4, sf::Vector2f(10*screen_scale, 10*screen_scale)); //  * *
+					    4, sf::Vector2f(10*screen_scale*GAMESCALE, 10*screen_scale*GAMESCALE)); //  * *
 					enemy.setPoint(
-					    5, sf::Vector2f(10*screen_scale, -10*screen_scale)); //  * *
+					    5, sf::Vector2f(10*screen_scale*GAMESCALE, -10*screen_scale*GAMESCALE)); //  * *
 					enemy.setPoint(
-					    6, sf::Vector2f(-10*screen_scale,
-							    -10*screen_scale)); //  ********
+					    6, sf::Vector2f(-10*screen_scale*GAMESCALE,
+							    -10*screen_scale*GAMESCALE)); //  ********
 					enemy.setPoint(7,
-						       sf::Vector2f(-10*screen_scale, 10*screen_scale));
+						       sf::Vector2f(-10*screen_scale*GAMESCALE, 10*screen_scale*GAMESCALE));
 					enemy.setFillColor(
 					    sf::Color::Transparent); // Black
 								     // Fill
 					enemy.setOutlineColor(
 					    sf::Color::White); // White Outline
-					enemy.setOutlineThickness(2*screen_scale);
+					enemy.setOutlineThickness(2*screen_scale*GAMESCALE);
 
 					enemy.setPosition(epos); // Position
 					enemy.setRotation(erot); // Rotate
@@ -3667,16 +3679,16 @@ int main() {
 
 					// Draw Fire
 					sf::ConvexShape fire(5);
-					fire.setPoint(0, sf::Vector2f(-8*screen_scale, -15*screen_scale));
-					fire.setPoint(1, sf::Vector2f(-5*screen_scale, -20*screen_scale));
-					fire.setPoint(2, sf::Vector2f(0*screen_scale, -18*screen_scale));
-					fire.setPoint(3, sf::Vector2f(5*screen_scale, -20*screen_scale));
-					fire.setPoint(4, sf::Vector2f(8*screen_scale, -15*screen_scale));
+					fire.setPoint(0, sf::Vector2f(-8*screen_scale*GAMESCALE, -15*screen_scale*GAMESCALE));
+					fire.setPoint(1, sf::Vector2f(-5*screen_scale*GAMESCALE, -20*screen_scale*GAMESCALE));
+					fire.setPoint(2, sf::Vector2f(0*screen_scale*GAMESCALE, -18*screen_scale*GAMESCALE));
+					fire.setPoint(3, sf::Vector2f(5*screen_scale*GAMESCALE, -20*screen_scale*GAMESCALE));
+					fire.setPoint(4, sf::Vector2f(8*screen_scale*GAMESCALE, -15*screen_scale*GAMESCALE));
 
 					fire.setFillColor(
 					    sf::Color::Transparent);
 					fire.setOutlineColor(sf::Color::White);
-					fire.setOutlineThickness(2*screen_scale);
+					fire.setOutlineThickness(2*screen_scale*GAMESCALE);
 
 					fire.setPosition(epos); // Position
 					fire.setRotation(erot); // Rotate
@@ -3690,7 +3702,7 @@ int main() {
 				for (int i = 0; i < texts; i++) {
 					sf::Text text(textstring.at(i).c_str(),
 						      roboto,
-						      TEXTSIZE*screen_scale); // Size 20 text
+						      TEXTSIZE*screen_scale*GAMESCALE); // Size 20 text
 					sf::Vector2f pos = textpositions.at(i);
 					pos.y += TEXTRISE *
 						 (texttime.at(i) /
@@ -3770,20 +3782,20 @@ int main() {
 					if (distance(pos.x - player1position.x,
 						     pos.y -
 							 player1position.y) <=
-						COLLECTRADIUS*screen_scale ||
+						COLLECTRADIUS*screen_scale*GAMESCALE ||
 					    poweruptype.at(i) == PLANET &&
 						distance(
 						    pos.x - player1position.x,
 						    pos.y -
 							player1position.y) <=
-						    PLANET_SIZE*screen_scale) {
+						    PLANET_SIZE*screen_scale*GAMESCALE) {
 						collect = 1;
 					} else if (distance(
 						       pos.x -
 							   player2position.x,
 						       pos.y -
 							   player2position.y) <=
-						       COLLECTRADIUS*screen_scale ||
+						       COLLECTRADIUS*screen_scale*GAMESCALE ||
 						   poweruptype.at(i) ==
 							   PLANET &&
 						       distance(
@@ -3793,7 +3805,7 @@ int main() {
 							   pos.y -
 							       player2position
 								   .y) <=
-							   PLANET_SIZE*screen_scale) {
+							   PLANET_SIZE*screen_scale*GAMESCALE) {
 						collect = 2;
 					}
 					if (powerupsize.at(i) != 1)
@@ -3802,12 +3814,12 @@ int main() {
 					sf::CircleShape radius;
 					if (poweruptype.at(i) != PLANET)
 						radius = sf::CircleShape(
-						    COLLECTRADIUS*screen_scale *
+						    COLLECTRADIUS*screen_scale*GAMESCALE *
 							powerupsize.at(i),
 						    16);
 					else
 						radius = sf::CircleShape(
-						    PLANET_SIZE*screen_scale *
+						    PLANET_SIZE*screen_scale*GAMESCALE *
 							powerupsize.at(i),
 						    16);
 					radius.setFillColor(
@@ -3825,7 +3837,7 @@ int main() {
 						case SHEILD: {
 							sf::CircleShape sheild =
 							    sf::CircleShape(
-								COLLECTRADIUS*screen_scale /
+								COLLECTRADIUS*screen_scale*GAMESCALE /
 								    2.f *
 								    powerupsize
 									.at(i),
@@ -3835,7 +3847,7 @@ int main() {
 								Transparent);
 							sheild
 							    .setOutlineThickness(
-								2*screen_scale);
+								2*screen_scale*GAMESCALE);
 							sheild.setOutlineColor(
 							    sf::Color::White);
 							sheild.setOrigin(
@@ -3888,7 +3900,7 @@ int main() {
 						case BOMB: {
 							sf::CircleShape bomb =
 							    sf::CircleShape(
-								COLLECTRADIUS*screen_scale /
+								COLLECTRADIUS*screen_scale*GAMESCALE /
 								    2.f *
 								    powerupsize
 									.at(i),
@@ -3929,7 +3941,7 @@ int main() {
 							// Minigame Planet
 							sf::CircleShape crater1 =
 							    sf::CircleShape(
-								PLANET_SIZE*screen_scale *
+								PLANET_SIZE*screen_scale*GAMESCALE *
 								    powerupsize
 									.at(i) /
 								    4,
@@ -3952,18 +3964,18 @@ int main() {
 							crater1.setPosition(
 							    pos +
 							    sf::Vector2f(
-								-PLANET_SIZE*screen_scale *
+								-PLANET_SIZE*screen_scale*GAMESCALE *
 								    powerupsize
 									.at(i) /
 								    3,
-								PLANET_SIZE*screen_scale *
+								PLANET_SIZE*screen_scale*GAMESCALE *
 								    powerupsize
 									.at(i) /
 								    2));
 							window.draw(crater1);
 							sf::CircleShape crater2 =
 							    sf::CircleShape(
-								PLANET_SIZE*screen_scale *
+								PLANET_SIZE*screen_scale*GAMESCALE *
 								    powerupsize
 									.at(i) /
 								    3,
@@ -3986,25 +3998,25 @@ int main() {
 							crater2.setPosition(
 							    pos -
 							    sf::Vector2f(
-								PLANET_SIZE*screen_scale *
+								PLANET_SIZE*screen_scale*GAMESCALE *
 								    powerupsize
 									.at(i) /
 								    3,
-								PLANET_SIZE*screen_scale *
+								PLANET_SIZE*screen_scale*GAMESCALE *
 								    powerupsize
 									.at(i) /
 								    3));
 							window.draw(crater2);
 							sf::CircleShape crater3 =
 							    sf::CircleShape(
-								PLANET_SIZE*screen_scale *
+								PLANET_SIZE*screen_scale*GAMESCALE *
 								    powerupsize
 									.at(i) /
 								    5,
 								16);
 							crater3
 							    .setOutlineThickness(
-								2*screen_scale);
+								2*screen_scale*GAMESCALE);
 							crater3.setOutlineColor(
 							    sf::Color::White);
 							crater3.setFillColor(
@@ -4020,7 +4032,7 @@ int main() {
 							crater3.setPosition(
 							    pos +
 							    sf::Vector2f(
-								PLANET_SIZE*screen_scale *
+								PLANET_SIZE*screen_scale*GAMESCALE *
 								    powerupsize
 									.at(i) /
 								    2,

@@ -76,13 +76,15 @@ public:
 		// Drawable init
 		rect.setSize(sf::Vector2f(hitbox.width, hitbox.height));
 		rect.setFillColor(sf::Color::White);
-		rect.setOrigin(rect.getSize().x/2, rect.getSize().y/2);	
+		rect.setOrigin(rect.getSize().x/2, rect.getSize().y/2);
 	}
 	void render(sf::RenderWindow* window) {
 		if (lives <= 0)
 			return;
+    if (invtimer > 0 && (unsigned)invtimer*8%2 == 0)
+      return;
 		rect.setPosition(sf::Vector2f(hitbox.left, hitbox.top));
-		rect.setRotation(50);
+		rect.setRotation(vel/window->getSize().y*60);
 		window->draw(rect);
 	}
 	void update(float delta, bool input, sf::RenderWindow* window) {
@@ -236,9 +238,10 @@ if (allpast) {
 	if (s_gameovertime >= s_gameoveranimtime) {
 		player1gameover = s_p0.dead();
 		player2gameover = s_p1.dead();
-		nextminigame = 10;
-		minigame = 10;
-	}
+		nextminigame = 11;
+		minigame = 11;
+	  clock.restart();
+  }
 }
 
 // Gameover fade

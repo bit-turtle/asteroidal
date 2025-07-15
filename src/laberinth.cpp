@@ -4,7 +4,7 @@
 #define MAZE_GEN_RATE 16
 #define SAFE_ENEMY_DIST 4	// Safe distance for the enemy to spawn
 //
-#define MOVE_DELAY 0.25	// Delay in seconds
+#define MOVE_DELAY 0.15	// Delay in seconds
 //
 #ifdef LABERINTH_FUNC
 // Maze Library
@@ -178,7 +178,7 @@ switch ((int)(clock.getElapsedTime().asSeconds()*8)%4) {
 		break;
 	default:
 		message = "Generating Maze...";
-} 
+}
 std::stringstream percentagedone;
 if (l_genguess > 0) percentagedone << (l_maze.iter() / l_genguess * 100);
 else percentagedone << "Strange%";
@@ -508,6 +508,7 @@ if (l_win) {
 	if (l_wintime >= l_winanimtime) {
 		minigame = l_nextminigame;
 		nextminigame = l_nextminigame;
-	}
+	  clock.restart();
+  }
 }
 #endif // Game
