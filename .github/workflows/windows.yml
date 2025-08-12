@@ -17,7 +17,7 @@ jobs:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: windows-2025
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -36,8 +36,8 @@ jobs:
       run: mkdir ${{github.workspace}}\bundle && Copy-Item -Recurse -Path ${{github.workspace}}\build\release\Asteroidal.exe, ${{github.workspace}}\build\release\openal32.dll, .\highscore.txt, .\assets, .\sounds, .\textures -Destination ${{github.workspace}}\bundle
 
     - name: Set Icon
-      # Set the icon of the exe
-      run: winget install rcedit && rcedit ${{github.workspace}}\bundle\Asteroidal.exe --set-icon .\icon.ico
+      # Install rcedit and set the icon of the exe
+      run: Invoke-WebRequest "https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x86.exe" -OutFile ${{github.workspace}}\rcedit.exe && ${{github.workspace}}\rcedit.exe ${{github.workspace}}\bundle\Asteroidal.exe --set-icon .\icon.ico
 
     - name: Upload Bundle
       uses: actions/upload-artifact@v4.6.2
