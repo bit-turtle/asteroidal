@@ -30,3 +30,13 @@ jobs:
     - name: Build
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Bundle
+      # Create directory to hold resulting files
+      run: mkdir ${{github.workspace}}/bundle && cp -r ${{github.workspace}}/build/Asteroidal.exe ${{github.workspace}}/build/openal32.dll ./highscore.txt ./assets ./sounds ./textures ${{github.workspace}}/bundle
+
+    - name: Upload Bundle
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: macos-build
+        path: ${{github.workspace}}/bundle
