@@ -281,9 +281,6 @@ if (l_endelay <= 0) {
 
 // Enemy reset using bomb
 if ( bombs > 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ) {
-#ifdef DEBUG
-	l_win = true;
-#endif
 	bombs--;
 	// Play Sound
 	explosionsound.play();

@@ -374,12 +374,7 @@ if (!m_blocktexture.loadFromFile("textures/blocks.png")) {
 // Game Map
 Grid<uint8_t> m_map;
 {
-#ifndef DEBUG
 	std::ifstream file("assets/mario.map.txt");
-#endif
-#ifdef DEBUG
-	std::ifstream file("assets/test.map.txt");
-#endif
 	if (file.is_open()) {
 		std::string line;
 		unsigned int linenumber = 0;

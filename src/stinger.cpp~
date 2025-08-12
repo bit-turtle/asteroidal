@@ -79,8 +79,10 @@ public:
 		rect.setOrigin(rect.getSize().x/2, rect.getSize().y/2);
 	}
 	void render(sf::RenderWindow* window) {
-		if (lives <= 0 || invtimer > 0 && (int)(invtimer*10)%2 == 0)
+		if (lives <= 0)
 			return;
+    if (invtimer > 0 && (unsigned)invtimer*8%2 == 0)
+      return;
 		rect.setPosition(sf::Vector2f(hitbox.left, hitbox.top));
 		rect.setRotation(vel/window->getSize().y*60);
 		window->draw(rect);
