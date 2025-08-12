@@ -36,8 +36,8 @@ jobs:
       run: mkdir ${{github.workspace}}\bundle && Copy-Item -Recurse -Path ${{github.workspace}}\build\release\Asteroidal.exe, ${{github.workspace}}\build\release\openal32.dll, .\highscore.txt, .\assets, .\sounds, .\textures -Destination ${{github.workspace}}\bundle
 
     - name: Set Icon
-      # Install rcedit and set the icon of the exe
-      run: winget install rcedit && rcedit ${{github.workspace}}\bundle\Asteroidal.exe --set-icon .\icon.ico
+      # Set the icon of the exe
+      run: rcedit ${{github.workspace}}\bundle\Asteroidal.exe --set-icon .\icon.ico
 
     - name: Upload Bundle
       uses: actions/upload-artifact@v4.6.2
