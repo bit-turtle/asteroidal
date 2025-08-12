@@ -33,7 +33,7 @@ jobs:
 
     - name: Bundle
       # Create directory to hold resulting files
-      run: mkdir ${{github.workspace}}\bundle && Copy-Item -Recurse -Path ${{github.workspace}}\build\Asteroidal.exe, ${{github.workspace}}/build/openal32.dll, .\highscore.txt, .\assets, .\sounds, .\textures -Destination ${{github.workspace}}\bundle
+      run: mkdir ${{github.workspace}}\bundle && Copy-Item -Recurse -Path ${{github.workspace}}\build\release\Asteroidal.exe, ${{github.workspace}}\build\release\openal32.dll, .\highscore.txt, .\assets, .\sounds, .\textures -Destination ${{github.workspace}}\bundle
 
     - name: Upload Bundle
       uses: actions/upload-artifact@v4.6.2
