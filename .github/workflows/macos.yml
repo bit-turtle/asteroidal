@@ -36,7 +36,7 @@ jobs:
       run: mkdir ${{github.workspace}}/bundle && cp -r ${{github.workspace}}/build/Asteroidal ./highscore.txt ./assets ./sounds ./textures ${{github.workspace}}/bundle
 
     - name: Upload Bundle
-      uses: actions/upload-artiface@v4.6.2
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: macos-build
         path: ${{github.workspace}}/bundle
