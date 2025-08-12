@@ -5,8 +5,7 @@ A game like asteroids written in C++
 Releases have been made for the following platforms:
 * Windows (x86_64)
 * Linux (x86_64)
-* Linux (armv8)
-**There is no release for MacOS unfortunatly, building the game will work on MacOS though**
+* MacOS (arm64)
 
 ## Things Required To Build
 * All Platforms:
@@ -26,6 +25,8 @@ Releases have been made for the following platforms:
   1. XCode Command Line Tools
      * Install XCode
      * Run `xcode-select --install`
+
+* If it doesn't build, check the workflow files in `.github/workflows` to see what you are missing
 
 ## How to Open The Terminal
 * Linux, usually [Ctrl+Alt+T] but you probably already know how.
