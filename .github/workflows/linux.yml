@@ -23,8 +23,8 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install Dependencies
-      # Install X11, Xrandr OpenGL, UDev, OpenAL, Vorbis, FLAC
-      run: sudo apt update && sudo apt install libx11-dev libxrandr-dev libgl-dev libudev-dev libopenal-dev libvorbis-dev libflac-dev
+      # Install X11, XRandR, XCursor OpenGL, UDev, OpenAL, Vorbis, FLAC
+      run: sudo apt update && sudo apt install libx11-dev libxrandr-dev libxcursor-dev libgl-dev libudev-dev libopenal-dev libvorbis-dev libflac-dev
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
