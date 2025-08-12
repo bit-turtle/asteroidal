@@ -37,7 +37,7 @@ jobs:
 
     - name: Set Icon
       # Install rcedit and set the icon of the exe
-      run: Invoke-WebRequest "https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x86.exe" -OutFile ${{github.workspace}}\rcedit.exe && ${{github.workspace}}\rcedit.exe ${{github.workspace}}\bundle\Asteroidal.exe --set-icon .\icon.ico
+      run: Invoke-WebRequest -Uri "https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x86.exe" -OutFile ${{github.workspace}}\rcedit.exe && ${{github.workspace}}\rcedit.exe ${{github.workspace}}\bundle\Asteroidal.exe --set-icon .\icon.ico
 
     - name: Upload Bundle
       uses: actions/upload-artifact@v4.6.2
