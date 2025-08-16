@@ -141,12 +141,12 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode::getFullscreenModes().at(0), GAMENAME,
 				sf::Style::Fullscreen);
 	float screen_scale = window.getSize().x/1080;
-	bool fps60 = true;
-	window.setFramerateLimit(60);
 	bool vsync = true;
 	window.setVerticalSyncEnabled(vsync);
 	window.clear();
 	window.display();
+	bool fps60 = false;
+	bool showfps = false;
 
 	// Load Files From Memory
 
@@ -439,9 +439,8 @@ int main() {
 		window.clear();
 
 
-// Debug Mode FPS counter
-#ifdef DEBUG
-		{
+		// FPS counter
+		if (showfps) {
 			int fps = (int)(1.f / deltatime);
 			std::stringstream fpsbuf;
 			fpsbuf << "FPS: ";
@@ -452,7 +451,6 @@ int main() {
 			fpstext.setFillColor(sf::Color::White);
 			window.draw(fpstext);
 		}
-#endif
 
 		// Draw To Window
 		switch (screen) {
@@ -550,13 +548,53 @@ int main() {
 			else
 				ftext.setFillColor(sf::Color::Black);
 			window.draw(ftext);
+			// FPS Counter toggle Text
+			sf::Text ctext( (showfps) ? "FPS Counter: Enabled" : "FPS Counter: Disabled", roboto, 50*screen_scale);
+			sf::FloatRect ctextsize = ctext.getLocalBounds();
+			// Vsync toggle button
+			sf::RectangleShape ctoggle(sf::Vector2f(ctextsize.width + MARGIN*screen_scale, ctextsize.height + MARGIN*screen_scale));
+			// Center csync Button, 66% from top
+			sf::FloatRect csize = ctoggle.getLocalBounds();
+			ctoggle.setPosition(sf::Vector2f(
+			    window.getSize().x / 2.f - csize.width / 2.f,
+			    window.getSize().y * 0.66));
+			// Detect Mouse Colision
+			sf::FloatRect chitbox = ctoggle.getGlobalBounds();
+			if (
+			    chitbox.contains(window.mapPixelToCoords(
+				sf::Mouse::getPosition(window)))) {
+				// Outline On Hocer
+				ctoggle.setOutlineColor(sf::Color::White);
+				ctoggle.setOutlineThickness(10*screen_scale);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					// Black On Press
+					ctoggle.setFillColor(
+					    sf::Color::Black);
+				if (click) {
+					buttonclicksound.play();
+					showfps = !showfps;
+				}
+			} else
+				// White Otherwise
+				ctoggle.setFillColor(sf::Color::White);
+			window.draw(ctoggle);
+			// Center Text In Button
+			ctext.setPosition(sf::Vector2f(
+			    window.getSize().x / 2.f - csize.width / 2.f,
+			    (chitbox.top + chitbox.height / 2.f) -
+				ctextsize.height / 2.f));
+			if (ctoggle.getFillColor() != sf::Color::White)
+				ctext.setFillColor(sf::Color::White);
+			else
+				ctext.setFillColor(sf::Color::Black);
+			window.draw(ctext);
 			// Back button
 			sf::RectangleShape playbutton(sf::Vector2f(400*screen_scale, 100*screen_scale));
-			// Center Play Button, 66% from top
+			// Center Play Button, 80% from top
 			sf::FloatRect buttonsize = playbutton.getLocalBounds();
 			playbutton.setPosition(sf::Vector2f(
 			    window.getSize().x / 2.f - buttonsize.width / 2.f,
-			    window.getSize().y * 0.66));
+			    window.getSize().y * 0.80));
 			// Detect Mouse Colision
 			sf::FloatRect playhitbox = playbutton.getGlobalBounds();
 			if (enter ||
@@ -4181,6 +4219,9 @@ int main() {
 					lazerpositions.clear();
 					lazerrotation.clear();
 					lazervelocity.clear();
+					
+					// Reset time
+					clock.restart();
 				}
 			} break;
 			default: { // Minigame Planets

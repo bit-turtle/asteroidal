@@ -309,6 +309,11 @@ if (!s_takeoff.loadFromFile("textures/takeoff.anim.png")) {	// '.anim.png' for s
 	std::cout << "Falied to Load Texture 'takeoff.anim'!" << std::endl;
 	ok = false;
 }
+sf::Texture s_escape;	// Spaceship Takeoff Animation
+if (!s_escape.loadFromFile("textures/escape.anim.png")) {	// '.anim.png' for spritesheet animations
+	std::cout << "Falied to Load Texture 'escape.anim'!" << std::endl;
+	ok = false;
+}
 
 // Mario ( 'm_' prefix )
 // Player Assets
@@ -1206,16 +1211,16 @@ case 10: {
 #include "stinger.cpp"
 } break;
 
-// Animation of escaping planet TODO
+// Animation of escaping planet
 
 case 11: {
 	sf::RectangleShape animation = sf::RectangleShape(sf::Vector2f(windowsize));
-	animation.setTexture(&s_takeoff);
-	animation.setTextureRect(animateframe(s_takeoff,19,13,time)); // 19 frames long at 13 fps using animation 'm_landinganim'
+	animation.setTexture(&s_escape);
+	animation.setTextureRect(animateframe(s_escape,24,13,time)); // 19 frames long at 13 fps using animation 's_escape'
 
 	// Move on if done
-	if (animationdone(19,13,time)) {
-		animation.setTextureRect(animateframe(s_takeoff,19,1,18)); // Freeze on last frame
+	if (animationdone(24,13,time)) {
+		animation.setTextureRect(animateframe(s_escape,24,1,23)); // Freeze on last frame
 		nextminigame = 12;
 		if (planetanimtime >= PLANETANIMLENGTH) planetanimtime = 0;
 	}

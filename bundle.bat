@@ -1,6 +1,7 @@
 rd /s/q bundle
 md bundle
 xcopy /s/e build\Release\Asteroidal.exe bundle
+rcedit bundle\Asteroidal.exe --set-icon icon.ico
 xcopy /s/e build\Release\openal32.dll bundle
 xcopy /s/e build\Release\highscore.txt bundle
 md bundle\textures
