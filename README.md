@@ -1,4 +1,4 @@
-# Amazing Game
+# Asteroidal
 A game like asteroids written in C++
 *All Music and Code Written by me*
 
